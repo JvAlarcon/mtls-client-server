@@ -1,10 +1,8 @@
 services:
-  api01: &api
+  app-server:
     build: .
-    hostname: api-clj
-    ports:
-      - "3000:3000"
-    image: rest-api-sample-clj
+    hostname: server
+    image: server-clj
  
   nginx:
     image: nginx:latest
@@ -12,11 +10,14 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./resources/certificate/server_certificate.crt:/etc/nginx/certs/server_certificate.crt:ro
       - ./resources/certificate/server.key:/etc/nginx/certs/server.key:ro
-    depends_on:
-      - api01
+      - ./resources/certificate/john_authority.crt:/etc/nginx/certs/ca.crt:ro
     ports:
-        # Obrigatório expor/usar a porta 9999 no load balancer!
-      - "9999:9999"
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app-server
+    links:
+      - app-server
 
 networks:
   default:

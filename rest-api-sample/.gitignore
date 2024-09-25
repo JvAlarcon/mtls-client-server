@@ -11,3 +11,4 @@ pom.xml.asc
 .clj-kondo/
 .lsp/
 *.key
+john_authority.crt
